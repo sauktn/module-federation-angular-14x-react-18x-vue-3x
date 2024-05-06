@@ -11,11 +11,11 @@ import {
 } from "@angular/core";
 import { Subject, fromEvent, takeUntil } from "rxjs";
 
-import * as Vue from "vue_settings_user/vue";
+import * as Vue from "vue_settings/vue";
 import {
   createApp,
   // App
-} from "vue_settings_user/vue";
+} from "vue_settings/vue";
 
 export type App<T> = typeof Vue.App;
 
@@ -64,7 +64,7 @@ export class SettingsComponent implements AfterViewInit, OnDestroy {
         // import("settings_user/App").then((module) => {
        */
 
-      import("vue_settings_user/App").then((module) => {
+      import("vue_settings/App").then((module) => {
         const app = createApp((module.default));
         app.mount(this.containerVueRef.nativeElement);
         this.app = app;

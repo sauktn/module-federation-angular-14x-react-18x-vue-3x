@@ -29,11 +29,15 @@ module.exports = {
       filename: "remoteEntry.js",
       remoteType: 'var',
       remotes: {
-        react_profile_user: `react_profile_user`,
-        vue_settings_user: `vue_settings_user`,
+        // react_profile_user: `react_profile_user`,
+        // vue_settings_user: `vue_settings_user`,
+        react_profile: `react_profile`,
+        vue_settings: `vue_settings`,
       },
       shared: {
         vue: {
+          shareKey: "vue",
+          shareScope: "default",
           singleton: true,
           requiredVersion: deps.vue,
         },

@@ -9,11 +9,11 @@ import {
   OnInit,
 } from "@angular/core";
 
-import * as React from "react_profile_user/react";
-import * as ReactDom from "react_profile_user/react-dom/client";
+import * as React from "react_profile/react";
+import * as ReactDom from "react_profile/react-dom/client";
 export type Root = typeof ReactDom.Root;
 export type ReactNode = typeof React.ReactNode;
-import { createRoot } from "react_profile_user/react-dom/client";
+import { createRoot } from "react_profile/react-dom/client";
 
 import { IUser } from "../models/user";
 import { ProfileUserService } from "./profile-user.service";
@@ -75,7 +75,7 @@ export class ProfileUserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.root.render("Loading script... ");
 
     try {
-      import("react_profile_user/ProfileReactComponent").then((module) => {
+      import("react_profile/ProfileReactComponent").then((module) => {
 
         const renderNode: ReactNode =
           React.createElement(

@@ -3,37 +3,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const deps = require("./package.json").dependencies;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const path = require("path");
+
 
 module.exports = {
   entry: "./src/index",
   mode: "development",
-  /* With library type module */
-  // experiments: {
-  //   outputModule: true,
-  // },
-  // externalsType: "module",
-
-  // externalsType: "promise",
-  // externals: {
-  //   react_profile_user: "Promise.resolve($)",
-  // },
-  // externals: {
-  //   react: {
-  //     commonjs: "react",
-  //     commonjs2: "react",
-  //     amd: "react",
-  //     umd: "react",
-  //     root: "React",
-  //   },
-  //   "react-dom": {
-  //     commonjs: "react-dom",
-  //     commonjs2: "react-dom",
-  //     amd: "react-dom",
-  //     umd: "react-dom",
-  //     root: "ReactDOM",
-  //   },
-  // },
+  target: 'web', 
   devServer: {
     port: 3001,
     headers: {
@@ -42,14 +17,11 @@ module.exports = {
     hot: true,
   },
   resolve: {
-    // alias: {
-    //   react: path.resolve(__dirname, "node_modules/react"),
-    // },
-    // modules: [path.join(__dirname, "node_modules")],
     extensions: [".js", ".tsx", ".ts"],
   },
   output: {
     publicPath: "auto",
+    uniqueName: "react_profile",
   },
   module: {
     rules: [
@@ -87,9 +59,12 @@ module.exports = {
       filename: "[name].[hash:8].css",
     }),
     new ModuleFederationPlugin({
-      name: "react_profile_user",
+      name: "react_profile",
       filename: "remoteEntry.js",
-      // library: { type: 'module'},
+      // remoteType: "promise",
+      // library: {
+      //   type: "commonjs-module",
+      // },
       exposes: {
         "./ProfileReactComponent": "./src/component/ProfileReactComponent",
         "./react": "react",
@@ -99,6 +74,8 @@ module.exports = {
       shared: {
         ...deps,
         react: {
+          // shareKey: "react",
+          // shareScope: "default",
           singleton: true,
           requiredVersion: deps.react,
         },

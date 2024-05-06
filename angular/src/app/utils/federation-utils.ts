@@ -18,7 +18,7 @@ declare const __webpack_share_scopes__: { default: Scope };
 
 const moduleMap: any = {};
 
-function loadRemoteEntryExtend(remoteEntry: string, remoteName: string): Promise<void> {
+function loadRemoteEntryExtend(remoteEntry: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         if (moduleMap[remoteEntry]) {
             resolve();
@@ -35,7 +35,7 @@ function loadRemoteEntryExtend(remoteEntry: string, remoteName: string): Promise
             resolve(); // window is the global namespace
         };
 
-        document.body.append(script);
+        document.head.append(script);
     });
 }
 
@@ -43,18 +43,19 @@ async function lookupExposedModuleExtend<T>(remoteName: string, exposedModule: s
     // Initializes the share scope. This fills it with known provided modules from this build and all remotes
     await __webpack_init_sharing__('default');
     // @ts-ignore
-    const container = window[remoteName] as Container; // or get the container somewhere else
+    const container = window[remoteName] as Promise<Container>; // or get the container somewhere else
     // Initialize the container, it may provide shared modules
+    console.log(remoteName);
 
     // await container.init(__webpack_share_scopes__.default);
     try {
-        await container.init(__webpack_share_scopes__.default)
+        (await container).init(__webpack_share_scopes__.default)
     } catch (e) {
         // already was initialized
     }
-    const factory = await container.get(exposedModule);
+    const factory = (await container).get(exposedModule);
 
-    const Module = factory();
+    const Module = () => factory();
 
     return Module as T;
 }
@@ -66,7 +67,7 @@ async function lookupExposedModuleExtend<T>(remoteName: string, exposedModule: s
 // };
 
 export async function loadRemoteModuleExtend(options: LoadRemoteEntryOptions | LoadRemoteModuleOptions): Promise<any> {
-    await loadRemoteEntryExtend((<LoadRemoteEntryOptions>options)?.remoteEntry, (<LoadRemoteEntryScriptOptions>options)?.remoteName);
+    await loadRemoteEntryExtend((<LoadRemoteEntryOptions>options)?.remoteEntry);
     return await lookupExposedModuleExtend<any>((<LoadRemoteModuleScriptOptions>options)?.remoteName, (<LoadRemoteModuleScriptOptions>options)?.exposedModule);
 }
 

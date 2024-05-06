@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkreact_profile=self.webpackChunkreact_profile||[]).push([[338],{338:(e,t,o)=>{var r=o(672);t.createRoot=r.createRoot,t.hydrateRoot=r.hydrateRoot}}]);

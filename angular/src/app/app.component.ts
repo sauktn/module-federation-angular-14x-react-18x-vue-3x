@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { APP_ID, Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
 import { ProfileUserService } from "./profile-user/profile-user.service";
 import { IUser } from "./models/user";
@@ -11,23 +11,14 @@ import { IUser } from "./models/user";
 export class AppComponent implements OnInit {
   currentUser$: Observable<IUser> = new Observable();
 
-  constructor(private profileUserService: ProfileUserService) {
-    // new Promise((resolve) => {
-    //   resolve(this.loadScript('http://localhost:3001/remoteEntry.js'));
-    //   resolve(this.loadScript('http://localhost:3002/remoteEntry.js'));
-    // })
-  }
+  constructor(
+    private profileUserService: ProfileUserService
+  ) {}
 
   ngOnInit(): void {
-
     this.currentUser$ = this.profileUserService.currentUser$;
+    console.log(APP_ID);
+
   }
 
-  loadScript(url: string) {
-    // const body = <HTMLDivElement>document.body;
-    const head = <HTMLDivElement>document.head;
-    const script = document.createElement('script');
-    script.src = url;
-    head.appendChild(script);
-  }
 }

@@ -6,29 +6,12 @@ const { VueLoaderPlugin } = require("vue-loader");
 const { ModuleFederationPlugin } = require("webpack").container;
 const deps = require("./package.json").dependencies;
 const webpack = require("webpack");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  // entry: ENTRY_POINT,
   entry: "./src/main",
   mode: "development",
-
-  // target: 'web',
-  // optimization: {
-  //   minimize: false,
-  // },
-  /* With library type module */
-  // experiments: {
-  //   outputModule: true,
-  // },
-  // externalsType: "module",
-  // experiments: {
-  //   outputModule: true,
-  // },
-  // externalsType: "module",
-  // externals: {
-  //   settings_user: "settings_user",
-  // },
+  target: "web",
   devServer: {
     port: 3002,
     headers: {
@@ -39,11 +22,6 @@ module.exports = {
     },
     hot: true,
   },
-
-  // output: {
-  //   path: path.resolve(__dirname, './dist'),
-  //   publicPath: '/dist/'
-  // },
 
   resolve: {
     extensions: [".vue", ".js", ".json"],
@@ -59,37 +37,21 @@ module.exports = {
   },
   output: {
     publicPath: "auto",
+    uniqueName: "vue_settings",
   },
   module: {
     rules: [
       {
         test: /\.vue$/,
         use: "vue-loader",
-        // options: {},
       },
       {
         test: /\.png$/,
         use: {
           loader: "url-loader",
-          // options: { limit: 8192 },
-          // options: {},
         },
       },
-      // {
-      //    test: /\.css$/,
-      //   use: [
-      //     "style-loader",
-      //     {
-      //       loader: "css-loader",
-      //       options: {
-      //         modules: {
-      //           auto: true,
-      //           localIdentName: "[path][name]__[local]--[hash:base64:5]",
-      //         },
-      //       },
-      //     },
-      //   ],
-      // },
+
       {
         test: /\.css$/,
         use: [
@@ -97,30 +59,30 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
             options: {},
           },
-          "css-loader"
+          "css-loader",
         ],
       },
     ],
   },
   plugins: [
     new VueLoaderPlugin(),
-    // new VuetifyLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].[hash:10].css",
     }),
     new ModuleFederationPlugin({
-      name: "vue_settings_user",
+      name: "vue_settings",
       filename: "remoteEntry.js",
-      // library: { type: 'var', name: 'settings_user'},
-      // library: { type: 'module'},
+      // remoteType: "promise",
+      // library: {
+      //   type: "commonjs-module",
+      // },
       exposes: {
-        /*
-          "./App": "./src/App", => Innit with shadown root
-        */
+        "./vue": "vue",
         "./App": "./src/App",
-        "./vue": "vue"
+        /* 
         // "./Settings": "./src/components/Settings",
-        // "./SettingsShadownRoot": "./src/components/SettingsShadownRoot"
+        // "./SettingsShadownRoot": "./src/components/SettingsShadownRoot" 
+        */
       },
       shared: {
         ...deps,
@@ -137,7 +99,6 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./index.html"),
-      inject: true,
     }),
     new CleanWebpackPlugin(),
   ],
